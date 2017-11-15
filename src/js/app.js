@@ -3,6 +3,21 @@ App = {
   contracts: {},
 
   init: function() {
+    // Load addresses
+    $.getJSON('../students.json', function(data) {
+      data.forEach(function(student,i,data){
+        web3.eth.getBalance(student.address,function(err,balance){
+          balance = web3.fromWei(balance);
+          $('#students > tbody:last-child').append('<tr> \
+          <th scope="row">'+student.name+'</th> \
+          <td>'+student.address+'</td>  \
+          <td>'+balance+'</td> \
+          <td id="'+student.address+'">nil</td></tr> \
+          ');
+        });
+      });
+    });
+
     return App.initWeb3();
   },
 
@@ -20,27 +35,41 @@ App = {
   },
 
   initContract: function() {
-    // Load addresses
-    $.getJSON('../students.json', function(data) {
-      data.forEach(function(student,i,data){
-        web3.fromWei(web3.eth.getBalance(student.address,function(err,balance){
-          console.log(balance);
-          $('#students > tbody:last-child').append('<tr> \
-          <th scope="row">'+student.name+'</th> \
-          <td>'+student.address+'</td>  \
-          <td>'+balance+'</td></tr>  \
-          ');
-        }));
-      });
+    $.getJSON('HumanStandardToken.json', function(data) {
+      // Get the necessary contract artifact file and instantiate it with truffle-contract
+      var TokenArtifact = data;
+      App.contracts.Token = TruffleContract(TokenArtifact);
+
+      // Set the provider for our contract
+      App.contracts.Token.setProvider(App.web3Provider);
+
+      // Use our contract to retrieve and mark the adopted pets
+      return App.getBalances();
     });
+
   },
 
   bindEvents: function() {
 
   },
 
-  markAdopted: function(adopters, account) {
+  getBalances: function() {
+    $.getJSON('../students.json', function(data) {
+      data.forEach(function(student,i,data){
+        return App.getBalance(student.address);
+      });
+    });
+  },
 
+  getBalance: function(address, account) {
+    App.contracts.Token.deployed().then(function(instance) {
+      Tokennstance = instance;
+      return Tokennstance.balanceOf.call(address);
+    }).then(function(balance){
+      $('#'+address).text(balance);
+    }).catch(function(err) {
+      console.log(err.message);
+    });
   },
 
   handleAdopt: function(event) {
