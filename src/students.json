@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "address": "0x60329b299c9852D19e4ec3497fB53699dA418F2D",
+    "name": "Student 1 Name",
+    "free": false
+  },
+  {
+    "id": 0,
+    "address": "0x7Eb3E03169b97F13cF67113a31d633B77840CD07",
+    "name": "Student 2 Name",
+    "free": true
+  }
+]
