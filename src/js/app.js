@@ -12,12 +12,11 @@ App = {
           <th scope="row">'+student.name+'</th> \
           <td>'+student.address+'</td>  \
           <td>'+balance+'</td> \
-          <td id="'+student.address+'">nil</td></tr> \
+          <td id="'+student.address+'">...wait</td></tr> \
           ');
         });
       });
     });
-
 
       return App.initWeb3();
   },
@@ -70,7 +69,6 @@ App = {
       Tokennstance = instance;
       return Tokennstance.balanceOf.call(address);
     }).then(function(balance){
-      console.log(address+': '+balance);
       $('#'+address).text(balance);
     }).catch(function(err) {
       console.log(err.message);
