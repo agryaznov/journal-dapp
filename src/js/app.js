@@ -7,7 +7,7 @@ App = {
     $.getJSON('../students.json', function(data) {
       data.forEach(function(student,i,data){
         web3.eth.getBalance(student.address,function(err,balance){
-          balance = web3.fromWei(balance);
+          var balance = web3.fromWei(balance);
           $('#students > tbody:last-child').append('<tr> \
           <th scope="row">'+student.name+'</th> \
           <td>'+student.address+'</td>  \
@@ -18,7 +18,8 @@ App = {
       });
     });
 
-    return App.initWeb3();
+
+      return App.initWeb3();
   },
 
   initWeb3: function() {
@@ -35,17 +36,20 @@ App = {
   },
 
   initContract: function() {
+// TESTRPC load:
     $.getJSON('HumanStandardToken.json', function(data) {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
-      var TokenArtifact = data;
-      App.contracts.Token = TruffleContract(TokenArtifact);
+      var TokenTArtifact = data;
 
+      // ROPSTENL USING deployed contract:
+      App.contracts.Token = TruffleContract(TokenTArtifact);                                // Set contract ABI
       // Set the provider for our contract
       App.contracts.Token.setProvider(App.web3Provider);
 
       // Use our contract to retrieve and mark the adopted pets
-      return App.getBalances();
+      return App.getBCTBalances();
     });
+
 
   },
 
@@ -53,19 +57,20 @@ App = {
 
   },
 
-  getBalances: function() {
+  getBCTBalances: function() {
     $.getJSON('../students.json', function(data) {
       data.forEach(function(student,i,data){
-        return App.getBalance(student.address);
+        return App.getBCTBalance(student.address);
       });
     });
   },
 
-  getBalance: function(address, account) {
-    App.contracts.Token.deployed().then(function(instance) {
+  getBCTBalance: function(address, account) {
+    App.contracts.Token.at('0x220392e76058BAd0798E16F16987093EBB0944DB').then(function(instance) {
       Tokennstance = instance;
       return Tokennstance.balanceOf.call(address);
     }).then(function(balance){
+      console.log(address+': '+balance);
       $('#'+address).text(balance);
     }).catch(function(err) {
       console.log(err.message);
