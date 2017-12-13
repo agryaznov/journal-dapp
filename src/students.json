@@ -88,5 +88,11 @@
     "address": "0x004120f424F83417C68109Cc8522594c22528d3c",
     "name": "Zamaleev Ilgiz",
     "free": false
+  },
+    {
+    "id": 16,
+    "address": "0x00b2D1e535fC15066672A0251245Aa3Ae79e03e3",
+    "name": "Kizilov Mikhail",
+    "free": false
   }
 ]
